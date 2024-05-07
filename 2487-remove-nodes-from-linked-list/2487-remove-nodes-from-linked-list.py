@@ -5,17 +5,24 @@
 #         self.next = next
 class Solution:
     def removeNodes(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        stk=[]
-        cur=head
-        while cur:
-            while stk and cur.val>stk[-1]:
-                stk.pop()
-            stk.append(cur.val)
-            cur=cur.next
+        def reverse_list(node):
+            prv,cur=None,node
+            while cur:
+                nxt=cur.next
+                cur.next=prv
+                prv=cur
+                cur=nxt
+            return prv
+        
+        reversed_head = reverse_list(head)
+        cur=reversed_head
+        max_val=cur.val
+        while cur.next:
+            if max_val>cur.next.val:
+                cur.next=cur.next.next
+            else:
+                cur=cur.next
+                max_val=cur.val
+        return reverse_list(reversed_head)
             
-        dummy=ListNode(0)
-        cur=dummy
-        for val in stk:
-            cur.next=ListNode(val)
-            cur=cur.next
-        return dummy.next
+            
