@@ -1,18 +1,12 @@
 class Solution:
     def beautifulSubsets(self, nums: List[int], k: int) -> int:
-        def dfs(i, subset):
-            if i >= len(nums):
-                if subset:
-                    nonlocal res
-                    res += 1
-                return
-            if not subset or all(abs(nums[i] - x) != k for x in subset):
-                subset.append(nums[i])
-                dfs(i + 1, subset)
-                subset.pop()
-
-            dfs(i + 1, subset)
-
-        res = 0
-        dfs(0, [])
-        return res
+        def helper(i, count):
+            if i==len(nums):
+                return 1
+            res = helper(i+1, count)
+            if not count[nums[i] + k] and not count[nums[i] - k]:
+                count[nums[i]] += 1
+                res += helper(i+1, count)
+                count[nums[i]] -= 1
+            return res
+        return helper(0, defaultdict(int)) - 1  # Subtract 1 to exclude the empty subset
